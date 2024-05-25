@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class WiredExtraUnseen extends InteractionWiredExtra {
-    public List<Integer> seenList = new ArrayList<>();
 
     public WiredExtraUnseen(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -47,7 +46,7 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
 
     @Override
     public void onPickUp() {
-        this.seenList.clear();
+        this.unseenEffects.clear();
     }
 
     @Override
@@ -58,32 +57,22 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
     @Override
     public void onMove(Room room, RoomTile oldLocation, RoomTile newLocation) {
         super.onMove(room, oldLocation, newLocation);
-        this.seenList.clear();
+        this.unseenEffects.clear();
     }
 
+    List<InteractionWiredEffect> unseenEffects = new ArrayList<>();
     public InteractionWiredEffect getUnseenEffect(List<InteractionWiredEffect> effects) {
-        List<InteractionWiredEffect> unseenEffects = new ArrayList<>();
-        for (InteractionWiredEffect effect : effects) {
-            if (!this.seenList.contains(effect.getId())) {
-                unseenEffects.add(effect);
-            }
+        if(unseenEffects.isEmpty()){
+            unseenEffects.addAll(effects);
+            unseenEffects.sort(Comparator.comparing(InteractionWiredEffect::getZ));
         }
-        unseenEffects.sort(Comparator.comparing(InteractionWiredEffect::getZ));
+
         System.out.println(unseenEffects);
-        InteractionWiredEffect effect = null;
-        if (!unseenEffects.isEmpty()) {
-            effect = unseenEffects.get(0);
-        } else {
-            this.seenList.clear();
+        InteractionWiredEffect effect;
+        effect = unseenEffects.get(0);
+        unseenEffects.remove(0);
 
-            if (!effects.isEmpty()) {
-                effect = effects.get(0);
-            }
-        }
 
-        if (effect != null) {
-            this.seenList.add(effect.getId());
-        }
         return effect;
     }
 }
