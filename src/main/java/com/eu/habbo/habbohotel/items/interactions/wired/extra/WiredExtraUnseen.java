@@ -69,8 +69,13 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
 
         System.out.println(unseenEffects);
         InteractionWiredEffect effect;
-        effect = unseenEffects.get(0);
-        unseenEffects.remove(0);
+        try{
+            System.out.println(unseenEffects);
+            effect = unseenEffects.get(0);
+            unseenEffects.remove(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 
         return effect;
