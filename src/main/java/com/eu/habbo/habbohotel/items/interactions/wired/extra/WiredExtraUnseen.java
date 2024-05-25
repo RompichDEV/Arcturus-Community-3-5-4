@@ -67,7 +67,6 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
             unseenEffects.sort(Comparator.comparing(InteractionWiredEffect::getZ));
         }
 
-        System.out.println(unseenEffects);
         InteractionWiredEffect effect;
         try{
             System.out.println(unseenEffects);
