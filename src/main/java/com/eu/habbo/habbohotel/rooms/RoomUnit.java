@@ -176,13 +176,9 @@ public class RoomUnit {
             RoomTile next = this.path.poll();
             boolean overrideChecks = next != null && this.canOverrideTile(next);
 
-            if (this.path.isEmpty()) {
+            if (this.path.isEmpty())
                 this.sitUpdate = true;
 
-                if (next != null && next.hasUnits() && !overrideChecks) {
-                    return false;
-                }
-            }
 
             Deque<RoomTile> peekPath = room.getLayout().findPath(this.currentLocation, this.path.peek(), this.goalLocation, this);
 

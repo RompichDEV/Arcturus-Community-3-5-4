@@ -5,7 +5,6 @@ import com.eu.habbo.habbohotel.achievements.AchievementManager;
 import com.eu.habbo.habbohotel.bots.Bot;
 import com.eu.habbo.habbohotel.bots.VisitorBot;
 import com.eu.habbo.habbohotel.commands.CommandHandler;
-import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.games.Game;
 import com.eu.habbo.habbohotel.guilds.Guild;
 import com.eu.habbo.habbohotel.guilds.GuildMember;
@@ -214,7 +213,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private TraxManager traxManager;
     private boolean cycleOdd;
     private long cycleTimestamp;
-    private final THashMap<Integer, List<Integer>> usersDicesTotalCount = new THashMap<>();
+    public Map<String, Long> repeatersLastTick = new HashMap<>();
 
     public Room(ResultSet set) throws SQLException {
         this.id = set.getInt("id");
@@ -624,13 +623,12 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private RoomTileState checkStateForItem(HabboItem item, RoomTile tile) {
         RoomTileState result = RoomTileState.BLOCKED;
 
-
         if (item.isWalkable()) {
             result = RoomTileState.OPEN;
         }
 
         if (item.getBaseItem().allowSit()) {
-            result = RoomTileState.SIT; //ICI
+            result = RoomTileState.SIT;
         }
 
         if (item.getBaseItem().allowLay()) {
@@ -649,11 +647,6 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         return this.tileWalkable(t.x, t.y);
     }
 
-    public boolean tileWalkable(RoomTile t, Habbo user) {
-        boolean hasHabbo = true;
-
-        return hasHabbo;
-    }
     public boolean tileWalkable(short x, short y) {
         RoomTile tile = this.layout.getTile(x, y);
 
@@ -665,6 +658,8 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         return !tile.hasUnits();
     }
+
+
 
     public void pickUpItem(HabboItem item, Habbo picker) {
         if (item == null)
@@ -4502,7 +4497,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         for (HabboItem area : this.getRoomSpecialTypes().getItemsOfType(InteractionBuildArea.class)) {
             if (((InteractionBuildArea) area).inSquare(tile) && ((InteractionBuildArea) area).isBuilder(habbo.getHabboInfo().getUsername())) {
-                return FurnitureMovementError.NONE;
+                    return FurnitureMovementError.NONE;
             }
         }
 
@@ -4868,20 +4863,5 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     public Collection<RoomUnit> getRoomUnitsAt(RoomTile tile) {
         THashSet<RoomUnit> roomUnits = getRoomUnits();
         return roomUnits.stream().filter(unit -> unit.getCurrentLocation() == tile).collect(Collectors.toSet());
-    }
-
-
-    public List<Integer> getUserDicesRolls(Integer userId) {
-        if (!usersDicesTotalCount.containsKey(userId))
-            usersDicesTotalCount.put(userId, new ArrayList<>());
-        return usersDicesTotalCount.get(userId);
-    }
-
-    public void addUserDiceRoll(Integer userId, int rolledNumber) {
-        this.getUserDicesRolls(userId).add(rolledNumber);
-    }
-
-    public void resetUserDicesRolls(Integer userId) {
-        this.usersDicesTotalCount.remove(userId);
     }
 }
