@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.achievements.AchievementManager;
 import com.eu.habbo.habbohotel.bots.Bot;
 import com.eu.habbo.habbohotel.bots.VisitorBot;
 import com.eu.habbo.habbohotel.commands.CommandHandler;
+import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.games.Game;
 import com.eu.habbo.habbohotel.guilds.Guild;
 import com.eu.habbo.habbohotel.guilds.GuildMember;
@@ -213,7 +214,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private TraxManager traxManager;
     private boolean cycleOdd;
     private long cycleTimestamp;
-    public Map<String, Long> repeatersLastTick = new HashMap<>();
+    private final THashMap<Integer, List<Integer>> usersDicesTotalCount = new THashMap<>();
 
     public Room(ResultSet set) throws SQLException {
         this.id = set.getInt("id");
@@ -623,12 +624,13 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private RoomTileState checkStateForItem(HabboItem item, RoomTile tile) {
         RoomTileState result = RoomTileState.BLOCKED;
 
+
         if (item.isWalkable()) {
             result = RoomTileState.OPEN;
         }
 
         if (item.getBaseItem().allowSit()) {
-            result = RoomTileState.SIT;
+            result = RoomTileState.SIT; //ICI
         }
 
         if (item.getBaseItem().allowLay()) {
@@ -647,17 +649,21 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         return this.tileWalkable(t.x, t.y);
     }
 
+    public boolean tileWalkable(RoomTile t, Habbo user) {
+        boolean hasHabbo = true;
+
+        return hasHabbo;
+    }
     public boolean tileWalkable(short x, short y) {
-        boolean walkable = this.layout.tileWalkable(x, y);
-        RoomTile tile = this.getLayout().getTile(x, y);
+        RoomTile tile = this.layout.getTile(x, y);
 
-        if (walkable && tile != null) {
-            if (tile.hasUnits() && !this.allowWalkthrough) {
-                walkable = false;
-            }
-        }
+        if (tile == null)
+            return false;
 
-        return walkable;
+        if (tile.state == RoomTileState.SIT || tile.state == RoomTileState.LAY)
+            return (!tile.hasUnits() || this.allowWalkthrough);
+
+        return !tile.hasUnits();
     }
 
     public void pickUpItem(HabboItem item, Habbo picker) {
@@ -1234,7 +1240,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     if (Emulator.getConfig().getBoolean("hotel.rooms.deco_hosting")) {
                         //Check if the user isn't the owner id
                         if (this.ownerId != habbo.getHabboInfo().getId()) {
-                            //Check if the time already have 1 minute (120 / 2 = 60s) 
+                            //Check if the time already have 1 minute (120 / 2 = 60s)
                             if (habbo.getRoomUnit().getTimeInRoom() >= 120) {
                                 AchievementManager.progressAchievement(this.ownerId, Emulator.getGameEnvironment().getAchievementManager().getAchievement("RoomDecoHosting"));
                                 habbo.getRoomUnit().resetTimeInRoom();
@@ -2056,7 +2062,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         for (Pet pet : toRemovePets) {
             removedPets.add(pet);
-            
+
             pet.removeFromRoom();
 
             Habbo habbo = Emulator.getGameEnvironment().getHabboManager().getHabbo(pet.getUserId());
@@ -3641,7 +3647,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         if (x < 0 || y < 0 || this.layout == null)
             return calculateHeightmap ? Short.MAX_VALUE : 0.0;
-        
+
         if (Emulator.getPluginManager().isRegistered(FurnitureStackHeightEvent.class, true)) {
             FurnitureStackHeightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureStackHeightEvent(x, y, this));
             if(event.hasPluginHelper()) {
@@ -3965,7 +3971,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             return;
 
         this.sendComposer(new RoomRemoveRightsListComposer(this, userId).compose());
-        
+
         if (this.rights.remove(userId)) {
             try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("DELETE FROM room_rights WHERE room_id = ? AND user_id = ?")) {
                 statement.setInt(1, this.id);
@@ -4476,7 +4482,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         if (tile == null || tile.state == RoomTileState.INVALID) {
             return FurnitureMovementError.INVALID_MOVE;
         }
-        
+
         rotation %= 8;
         if (this.hasRights(habbo) || this.getGuildRightLevel(habbo).isEqualOrGreaterThan(RoomRightLevels.GUILD_RIGHTS) || habbo.hasPermission(Permission.ACC_MOVEROTATE)) {
             return FurnitureMovementError.NONE;
@@ -4496,7 +4502,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         for (HabboItem area : this.getRoomSpecialTypes().getItemsOfType(InteractionBuildArea.class)) {
             if (((InteractionBuildArea) area).inSquare(tile) && ((InteractionBuildArea) area).isBuilder(habbo.getHabboInfo().getUsername())) {
-                    return FurnitureMovementError.NONE;
+                return FurnitureMovementError.NONE;
             }
         }
 
@@ -4862,5 +4868,20 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     public Collection<RoomUnit> getRoomUnitsAt(RoomTile tile) {
         THashSet<RoomUnit> roomUnits = getRoomUnits();
         return roomUnits.stream().filter(unit -> unit.getCurrentLocation() == tile).collect(Collectors.toSet());
+    }
+
+
+    public List<Integer> getUserDicesRolls(Integer userId) {
+        if (!usersDicesTotalCount.containsKey(userId))
+            usersDicesTotalCount.put(userId, new ArrayList<>());
+        return usersDicesTotalCount.get(userId);
+    }
+
+    public void addUserDiceRoll(Integer userId, int rolledNumber) {
+        this.getUserDicesRolls(userId).add(rolledNumber);
+    }
+
+    public void resetUserDicesRolls(Integer userId) {
+        this.usersDicesTotalCount.remove(userId);
     }
 }

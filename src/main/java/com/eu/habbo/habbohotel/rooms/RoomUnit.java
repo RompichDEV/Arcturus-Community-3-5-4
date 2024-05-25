@@ -253,7 +253,6 @@ public class RoomUnit {
                         return false;
                     }
                     next = (RoomTile)this.path.pop();
-
                 }
             }
 
