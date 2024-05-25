@@ -11,6 +11,7 @@ import com.eu.habbo.messages.ServerMessage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class WiredExtraUnseen extends InteractionWiredExtra {
@@ -67,8 +68,8 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
                 unseenEffects.add(effect);
             }
         }
-        unseenEffects.Sort();
-        System.out.println(unseenEffects.toString());
+        unseenEffects.sort(Comparator.comparing(InteractionWiredEffect::getZ));
+        System.out.println(unseenEffects);
         InteractionWiredEffect effect = null;
         if (!unseenEffects.isEmpty()) {
             effect = unseenEffects.get(0);
@@ -83,7 +84,6 @@ public class WiredExtraUnseen extends InteractionWiredExtra {
         if (effect != null) {
             this.seenList.add(effect.getId());
         }
-        System.out.println(effect.toString());
         return effect;
     }
 }
