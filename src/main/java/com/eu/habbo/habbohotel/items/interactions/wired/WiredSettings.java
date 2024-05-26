@@ -7,6 +7,7 @@ public class WiredSettings {
     private int stuffTypeSelectionCode;
     private int delay;
 
+
     public WiredSettings(int[] intParams, String stringParam, int[] furniIds, int stuffTypeSelectionCode, int delay)
     {
         this.furniIds = furniIds;

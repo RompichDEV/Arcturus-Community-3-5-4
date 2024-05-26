@@ -270,6 +270,29 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_cnd_trggrer_on_frn", WiredConditionTriggerOnFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_has_handitem", WiredConditionHabboHasHandItem.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_date_rng_active", WiredConditionDateRangeActive.class));
+        //Condition Wired Add by rompich
+        this.interactionsList.add(new ItemInteraction("wf_cnd_BBGA", WiredConditionBattleBanzaiGameActive.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_FGA", WiredConditionFreezeGameActive.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_hascredit", WiredConditionHabboHasCredits.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_hasdiamants", WiredConditionHabboHasDiamonds.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_hasdduckets", WiredConditionHabboHasDuckets.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_hasrank", WiredConditionHabboHasRank.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_isAFK", WiredConditionHabboIsAFK.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_isDancing", WiredConditionHabboIsDancing.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_NoAFK", WiredConditionHabboIsNotAFK.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_Nointhefurni", WiredConditionHabboNotOwnsFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_NoRank", WiredConditionHabboNotRank.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_HabboAleBadge", WiredConditionHabboOwnsBadge.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_HabboSurLeMobis", WiredConditionHabboOwnsFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_Humeur", WiredConditionMottoContains.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_BBGA", WiredConditionNotBattleBanzaiGameActive.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_FGA", WiredConditionNotFreezeGameActive.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_credit", WiredConditionNotHabboHasCredits.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_diamant", WiredConditionNotHabboHasDiamonds.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_duckets", WiredConditionNotHabboHasDuckets.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_dancing", WiredConditionNotHabboIsDancing.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_badge", WiredConditionNotHabboOwnsBadge.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_humeur", WiredConditionNotMottoContains.class));
 
 
         this.interactionsList.add(new ItemInteraction("wf_xtra_random", WiredExtraRandom.class));

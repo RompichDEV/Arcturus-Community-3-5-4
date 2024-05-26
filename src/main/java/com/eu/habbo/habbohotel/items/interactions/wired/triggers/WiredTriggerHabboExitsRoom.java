@@ -79,11 +79,6 @@ public class WiredTriggerHabboExitsRoom extends InteractionWiredTrigger {
         message.appendInt(Integer.valueOf(0));
     }
 
-    public boolean saveData(ClientMessage packet) {
-        packet.readInt();
-        this.username = packet.readString();
-        return true;
-    }
 
     public boolean isTriggeredByRoomUnit() {
         return true;
