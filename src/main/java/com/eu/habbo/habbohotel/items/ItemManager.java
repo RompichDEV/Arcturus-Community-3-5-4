@@ -245,6 +245,23 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_alert", WiredEffectAlert.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_handitem", WiredEffectGiveHandItem.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_effect", WiredEffectGiveEffect.class));
+        //Wired Effect by rompich
+        this.interactionsList.add(new ItemInteraction("wf_act_give_badge", WiredEffectGiveUserBadge.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_winwin", WiredEffectGiveUserAchievement.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_credits", WiredEffectGiveUserCredits.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_dance", WiredEffectGiveUserDance.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_diamants", WiredEffectGiveUserDiamonds.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_duckets", WiredEffectGiveUserDuckets.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_enable", WiredEffectGiveUserEffect.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_mobis", WiredEffectGiveUserFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_points", WiredEffectGiveUserPoints.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_sit", WiredEffectUserSit.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_lay", WiredEffectUserLay.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_walkToFurni", WiredEffectUserWalkToFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_teleportAppart", WiredEffectSendUserToRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_bubbleRoom", WiredEffectWhisperRoom.class));
+
+
 
         this.interactionsList.add(new ItemInteraction("wf_cnd_has_furni_on", WiredConditionFurniHaveFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_furnis_hv_avtrs", WiredConditionFurniHaveHabbo.class));
