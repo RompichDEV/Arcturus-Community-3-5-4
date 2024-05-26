@@ -208,7 +208,12 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_trg_score_achieved", WiredTriggerScoreAchieved.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_game_team_win", WiredTriggerTeamWins.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_game_team_lose", WiredTriggerTeamLoses.class));
-
+        //Add by rompich
+        this.interactionsList.add(new ItemInteraction("wf_trig_dicerolled", WiredTriggerDiceRolled.class));
+        this.interactionsList.add(new ItemInteraction("wf_trig_exit_room", WiredTriggerHabboExitsRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_trig_roomLoaded", WiredTriggerRoomLoaded.class));
+        this.interactionsList.add(new ItemInteraction("wf_trig_userRoomVote", WiredTriggerUserRoomVote.class));
+        this.interactionsList.add(new ItemInteraction("wf_trig_userTalk", WiredTriggerUserTalk.class));
 
         this.interactionsList.add(new ItemInteraction("wf_act_toggle_state", WiredEffectToggleFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));
