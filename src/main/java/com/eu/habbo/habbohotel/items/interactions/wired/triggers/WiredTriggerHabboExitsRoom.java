@@ -8,7 +8,6 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +25,7 @@ public class WiredTriggerHabboExitsRoom extends InteractionWiredTrigger {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
+    @Override
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
         Habbo habbo = room.getHabbo(roomUnit);
         System.out.println(1);
@@ -37,10 +37,12 @@ public class WiredTriggerHabboExitsRoom extends InteractionWiredTrigger {
         return false;
     }
 
+    @Override
     public String getWiredData() {
         return WiredHandler.getGsonBuilder().create().toJson(new JsonData(this.username));
     }
 
+    @Override
     public void loadWiredData(ResultSet set, Room room) throws SQLException {
         String wiredData = set.getString("wired_data");
         if (wiredData.startsWith("{")) {
@@ -51,36 +53,39 @@ public class WiredTriggerHabboExitsRoom extends InteractionWiredTrigger {
         }
     }
 
+    @Override
     public void onPickUp() {
         this.username = "";
     }
 
+    @Override
     public WiredTriggerType getType() {
         return type;
     }
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        settings.getIntParams();
         this.username = settings.getStringParam();
         return true;
     }
 
+    @Override
     public void serializeWiredData(ServerMessage message, Room room) {
-        message.appendBoolean(Boolean.valueOf(false));
-        message.appendInt(Integer.valueOf(5));
-        message.appendInt(Integer.valueOf(0));
-        message.appendInt(Integer.valueOf(getBaseItem().getSpriteId()));
-        message.appendInt(Integer.valueOf(getId()));
+        message.appendBoolean(false);
+        message.appendInt(5);
+        message.appendInt(0);
+        message.appendInt(this.getBaseItem().getSpriteId());
+        message.appendInt(this.getId());
         message.appendString(this.username);
-        message.appendInt(Integer.valueOf(0));
-        message.appendInt(Integer.valueOf(0));
-        message.appendInt(Integer.valueOf(7));
-        message.appendInt(Integer.valueOf(0));
-        message.appendInt(Integer.valueOf(0));
+        message.appendInt(0);
+        message.appendInt(0);
+        message.appendInt(this.getType().code);
+        message.appendInt(0);
+        message.appendInt(0);
     }
 
 
+    @Override
     public boolean isTriggeredByRoomUnit() {
         return true;
     }
