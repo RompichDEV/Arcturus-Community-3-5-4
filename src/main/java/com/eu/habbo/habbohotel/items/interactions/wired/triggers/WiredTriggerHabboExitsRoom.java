@@ -28,6 +28,7 @@ public class WiredTriggerHabboExitsRoom extends InteractionWiredTrigger {
 
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
         Habbo habbo = room.getHabbo(roomUnit);
+        System.out.println(1);
         if (habbo != null) {
             if (this.username.length() > 0)
                 return habbo.getHabboInfo().getUsername().equalsIgnoreCase(this.username);

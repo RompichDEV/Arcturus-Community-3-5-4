@@ -88,7 +88,6 @@ public class WiredTriggerHabboEntersRoom extends InteractionWiredTrigger {
     @Override
     public boolean saveData(WiredSettings settings) {
         this.username = settings.getStringParam();
-
         return true;
     }
 

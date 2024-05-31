@@ -95,6 +95,11 @@
             <version>4.1.49.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
         <!-- GSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

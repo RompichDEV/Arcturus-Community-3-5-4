@@ -215,6 +215,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_trig_userRoomVote", WiredTriggerUserRoomVote.class));
         this.interactionsList.add(new ItemInteraction("wf_trig_userTalk", WiredTriggerUserTalk.class));
 
+
         this.interactionsList.add(new ItemInteraction("wf_act_toggle_state", WiredEffectToggleFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));
         this.interactionsList.add(new ItemInteraction("wf_act_match_to_sshot", WiredEffectMatchFurni.class));
@@ -260,6 +261,9 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_walkToFurni", WiredEffectUserWalkToFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_teleportAppart", WiredEffectSendUserToRoom.class));
         this.interactionsList.add(new ItemInteraction("wf_act_bubbleRoom", WiredEffectWhisperRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_collider_room", WiredEffectCollideRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_SUPERWIRED", WiredEffectSuperWired.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_TileCollision", WiredEffectTileCollision.class));
 
 
 
