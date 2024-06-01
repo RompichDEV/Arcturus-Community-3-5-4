@@ -263,6 +263,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_collider_room", WiredEffectCollideRoom.class));
         this.interactionsList.add(new ItemInteraction("wf_act_SUPERWIRED", WiredEffectSuperWired.class));
         this.interactionsList.add(new ItemInteraction("wf_act_TileCollision", WiredEffectTileCollision.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_BodyRotation", WiredEffectSetBodyRotation.class));
 
 
 

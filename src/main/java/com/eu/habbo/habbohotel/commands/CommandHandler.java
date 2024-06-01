@@ -294,7 +294,7 @@ public class CommandHandler {
         addCommand(new AddYoutubePlaylistCommand());
         addCommand(new SoftKickCommand());
         addCommand(new SubscriptionCommand());
-
+        addCommand(new CloseDicesCommand());
         addCommand(new TestCommand());
     }
 

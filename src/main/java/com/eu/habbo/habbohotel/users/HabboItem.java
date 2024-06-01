@@ -556,4 +556,8 @@ public abstract class HabboItem implements Runnable, IEventTriggers {
                 this.getBaseItem().getLength() + (marginY * 2),
                 this.getRotation());
     }
+
+    public Point get2DPosition() {
+        return new Point(getX(), getY());
+    }
 }

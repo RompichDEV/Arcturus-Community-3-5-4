@@ -23,11 +23,12 @@ import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.awt.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
+import java.util.List;
 
 public class RoomUnit {
 
@@ -809,4 +810,9 @@ public class RoomUnit {
     public void setMoveBlockingTask(ScheduledFuture moveBlockingTask) {
         this.moveBlockingTask = moveBlockingTask;
     }
+
+    public Point get2DPosition() {
+        return new Point(getX(), getY());
+    }
 }
+
