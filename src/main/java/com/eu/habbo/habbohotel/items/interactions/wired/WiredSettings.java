@@ -1,5 +1,7 @@
 package com.eu.habbo.habbohotel.items.interactions.wired;
 
+import java.util.Arrays;
+
 public class WiredSettings {
     private int[] intParams;
     private String stringParam;
@@ -7,9 +9,7 @@ public class WiredSettings {
     private int stuffTypeSelectionCode;
     private int delay;
 
-
-    public WiredSettings(int[] intParams, String stringParam, int[] furniIds, int stuffTypeSelectionCode, int delay)
-    {
+    public WiredSettings(int[] intParams, String stringParam, int[] furniIds, int stuffTypeSelectionCode, int delay) {
         this.furniIds = furniIds;
         this.intParams = intParams;
         this.stringParam = stringParam;
@@ -17,8 +17,7 @@ public class WiredSettings {
         this.delay = delay;
     }
 
-    public WiredSettings(int[] intParams, String stringParam, int[] furniIds, int stuffTypeSelectionCode)
-    {
+    public WiredSettings(int[] intParams, String stringParam, int[] furniIds, int stuffTypeSelectionCode) {
         this(intParams, stringParam, furniIds, stuffTypeSelectionCode, 0);
     }
 
@@ -60,5 +59,10 @@ public class WiredSettings {
 
     public void setDelay(int delay) {
         this.delay = delay;
+    }
+
+    @Override
+    public String toString() {
+        return stringParam;
     }
 }

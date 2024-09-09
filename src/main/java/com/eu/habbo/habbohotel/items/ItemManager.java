@@ -266,7 +266,6 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_BodyRotation", WiredEffectSetBodyRotation.class));
 
 
-
         this.interactionsList.add(new ItemInteraction("wf_cnd_has_furni_on", WiredConditionFurniHaveFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_furnis_hv_avtrs", WiredConditionFurniHaveHabbo.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_stuff_is", WiredConditionFurniTypeMatch.class));
@@ -314,7 +313,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_cnd_not_dancing", WiredConditionNotHabboIsDancing.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_not_badge", WiredConditionNotHabboOwnsBadge.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_not_humeur", WiredConditionNotMottoContains.class));
-
+        this.interactionsList.add(new ItemInteraction("wf_cnd_superwired", WiredConditionSuperWired.class));
 
         this.interactionsList.add(new ItemInteraction("wf_xtra_random", WiredExtraRandom.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_unseen", WiredExtraUnseen.class));
