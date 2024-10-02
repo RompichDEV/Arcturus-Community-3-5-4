@@ -24,7 +24,7 @@ public class LayCommand extends Command {
 
         RoomTile tile = gameClient.getHabbo().getRoomUnit().getCurrentLocation();
         if (tile == null) {
-            return false;
+            return true;
         }
 
         for (int i = 0; i < 3; i++) {

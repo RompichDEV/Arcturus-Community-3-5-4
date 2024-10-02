@@ -13,6 +13,7 @@ import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.messages.outgoing.rooms.users.RoomUserStatusComposer;
+import com.eu.habbo.messages.rcon.RCONMessage;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.procedure.TIntIntProcedure;
 import org.slf4j.Logger;
@@ -42,6 +43,9 @@ public class HabboInfo implements Runnable {
     private int lastOnline;
     private int homeRoom;
     private boolean online;
+    private int InfostandBg;
+    private int InfostandStand;
+    private int InfostandOverlay;
     private int loadingRoom;
     private Room currentRoom;
     private int roomQueueId;
@@ -83,6 +87,9 @@ public class HabboInfo implements Runnable {
             this.lastOnline = set.getInt("last_online");
             this.machineID = set.getString("machine_id");
             this.online = false;
+            this.InfostandBg = set.getInt("background_id");
+            this.InfostandStand = set.getInt("background_stand_id");
+            this.InfostandOverlay = set.getInt("background_overlay_id");
             this.currentRoom = null;
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
@@ -270,6 +277,30 @@ public class HabboInfo implements Runnable {
         this.motto = motto;
     }
 
+    public int getInfostandBg() {
+        return InfostandBg;
+    }
+
+    public void setInfostandBg(int infostandBg) {
+        InfostandBg = infostandBg;
+    }
+
+    public int getInfostandStand() {
+        return InfostandStand;
+    }
+
+    public void setInfostandStand(int infostandStand) {
+        InfostandStand = infostandStand;
+    }
+
+    public int getInfostandOverlay() {
+        return InfostandOverlay;
+    }
+
+    public void setInfostandOverlay(int infostandOverlay) {
+        InfostandOverlay = infostandOverlay;
+    }
+
     public Rank getRank() {
         return this.rank;
     }
@@ -421,7 +452,6 @@ public class HabboInfo implements Runnable {
     public void setRiding(RideablePet riding) {
         this.riding = riding;
     }
-
     public void dismountPet() {
         this.dismountPet(false);
     }
@@ -533,11 +563,85 @@ public class HabboInfo implements Runnable {
 
     public List<MessengerCategory> getMessengerCategories() { return this.messengerCategories; }
 
+    public void updateBadges() {
+
+    }
+
+    public void updateCredits() {
+        try (Connection connection2 = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement2 = connection2.prepareStatement("UPDATE users SET credits = ? WHERE id = ?")) {
+            statement2.setInt(1, this.getCredits());
+            statement2.setInt(2, this.id);
+            statement2.execute();
+        } catch (SQLException e2) {
+            LOGGER.error("Caught SQL exception", e2);
+        }
+        LOGGER.info("Credits updated on "+this.getUsername()+" account");
+    }
+    public void updateDuckets() {
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT * FROM users_currency WHERE user_id = ? AND type = ? LIMIT 1")) {
+            statement.setInt(1, this.id);
+            statement.setInt(2, 0);
+            try (ResultSet set = statement.executeQuery()) {
+                if (set.next()) {
+                    try (Connection connection2 = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement2 = connection2.prepareStatement("UPDATE users_currency SET users_currency.amount = ? WHERE users_currency.user_id = ? AND users_currency.type = 0")) {
+                        statement2.setInt(1, this.getPixels());
+                        statement2.setInt(2, this.id);
+                        statement2.execute();
+                    } catch (SQLException e2) {
+                        LOGGER.error("Caught SQL exception", e2);
+                    }
+                    LOGGER.info("Duckets updated on "+this.getUsername()+" account");
+                } else {
+                    try (Connection connection3 = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement3 = connection3.prepareStatement("INSERT INTO users_currency (user_id, type, amount) VALUES (?, ?, ?, NOW(), NOW())")) {
+                        statement3.setInt(1, this.id); //userid
+                        statement3.setInt(2, 0); //type
+                        statement3.setInt(3, 200000); //amount
+                        statement3.execute();
+                    } catch (SQLException e) {
+                        LOGGER.error("Caught SQL exception", e);
+                    }
+                    LOGGER.info("Insert Duckets in users currency for "+this.username+" account");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+    }
+    public void updateDiamonds() {
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT * FROM users_currency WHERE user_id = ? AND type = '5' LIMIT 1")) {
+            statement.setInt(1, this.id);
+            try (ResultSet set = statement.executeQuery()) {
+                if (set.next()) {
+                    try (Connection connection2 = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement2 = connection2.prepareStatement("UPDATE users_currency SET users_currency.amount = ? WHERE users_currency.user_id = ? AND users_currency.type = 5")) {
+                        statement2.setInt(1, this.getCurrencyAmount(5));
+                        statement2.setInt(2, this.id);
+                        statement2.execute();
+                    } catch (SQLException e2) {
+                        LOGGER.error("Caught SQL exception", e2);
+                    }
+                    LOGGER.info("Diamonds updated on "+this.getUsername()+" account");
+                } else {
+                    try (Connection connection3 = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement3 = connection3.prepareStatement("INSERT INTO users_currency (user_id, type, amount) VALUES (?, ?, ?, NOW(), NOW())")) {
+                        statement3.setInt(1, this.id); //userid
+                        statement3.setInt(2, 5); //type
+                        statement3.setInt(3, 0); //amount
+                        statement3.execute();
+                    } catch (SQLException e3) {
+                        LOGGER.error("Caught SQL exception", e3);
+                    }
+                    LOGGER.info("Insert Diamonds in users currency for "+this.username+" account");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+    }
     @Override
     public void run() {
         this.saveCurrencies();
 
-        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE users SET motto = ?, online = ?, look = ?, gender = ?, credits = ?, last_login = ?, last_online = ?, home_room = ?, ip_current = ?, `rank` = ?, machine_id = ?, username = ? WHERE id = ?")) {
+
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE users SET motto = ?, online = ?, look = ?, gender = ?, credits = ?, last_login = ?, last_online = ?, home_room = ?, ip_current = ?, `rank` = ?, machine_id = ?, username = ?, background_id = ?, background_stand_id = ?, background_overlay_id = ? WHERE id = ?")) {
             statement.setString(1, this.motto);
             statement.setString(2, this.online ? "1" : "0");
             statement.setString(3, this.look);
@@ -550,7 +654,10 @@ public class HabboInfo implements Runnable {
             statement.setInt(10, this.rank != null ? this.rank.getId() : 1);
             statement.setString(11, this.machineID);
             statement.setString(12, this.username);
-            statement.setInt(13, this.id);
+            statement.setInt(13, this.InfostandBg);
+            statement.setInt(14, this.InfostandStand);
+            statement.setInt(15, this.InfostandOverlay);
+            statement.setInt(16, this.id);
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
